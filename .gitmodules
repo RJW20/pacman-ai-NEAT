@@ -1,0 +1,6 @@
+[submodule "submodules/pacman-app"]
+	path = submodules/pacman-app
+	url = https://github.com/RJW20/pacman-app.git
+[submodule "submodules/NEAT"]
+	path = submodules/NEAT
+	url = https://github.com/RJW20/NEAT.git

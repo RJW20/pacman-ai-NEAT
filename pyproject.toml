@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "pacman-ai-neat"
+version = "0.1.0"
+description = "An application of my implementation of NEAT (https://github.com/RJW20/NEAT) to the game PacMan."
+authors = ["RJW20"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+neat = { path = "submodules/NEAT/", develop = true }
+pacman_app = { path = "submodules/pacman-app/", develop = true }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
