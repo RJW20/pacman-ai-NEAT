@@ -2,6 +2,7 @@ from pacman_app import PacMan, Ghosts
 from pacman_app.map import Direction, Position
 from neat import BasePlayer
 
+
 def position_to_float(position: Position) -> list[float]:
     """Return a Character's Position as normalised values to use in a Genome."""
 

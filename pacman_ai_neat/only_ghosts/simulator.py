@@ -1,5 +1,5 @@
 from .player import Player
-from pacman_app import Ghosts
+from pacman_app import Ghosts, Blinky, Pinky, Inky, Clyde
 
 
 def simulate(pacman: Player) -> Player:
@@ -8,7 +8,11 @@ def simulate(pacman: Player) -> Player:
     Assigns a fitness that is simply the number of frames PacMan lives for.
     """
 
-    ghosts = Ghosts(pacman)
+    blinky = Blinky(pacman)
+    pinky = Pinky(pacman)
+    inky = Inky(pacman)
+    clyde = Clyde(pacman)
+    ghosts = Ghosts(pacman, blinky, pinky, inky, clyde)
     pacman.initialise()
     ghosts.initialise()
 
