@@ -11,6 +11,9 @@ python = "^3.12"
 neat = { path = "submodules/NEAT/", develop = true }
 pacman_app = { path = "submodules/pacman-app/", develop = true }
 
+[tool.poetry.scripts]
+main = "pacman_ai_neat.main:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
