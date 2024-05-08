@@ -74,6 +74,11 @@ class Playback:
             self.ghosts = Ghosts(self.pacman, blinky, pinky, inky, clyde)
             self.ghosts.initialise()
 
+            # If only ghosts then have all active from the start
+            if all([not self.include_pacdots, not self.include_powerdots, not self.include_fruit]):
+                self.ghosts.inky.inactive = False
+                self.ghosts.clyde.inactive = False
+
         # Dot set up
         if self.include_pacdots or self.include_powerdots:        
             self.pacdots = PacDots()
@@ -93,8 +98,15 @@ class Playback:
         self.pacman.initialise()
         if self.include_ghosts:
             self.ghosts.initialise()
+
+            # If only ghosts then have all active from the start
+            if all([not self.include_pacdots, not self.include_powerdots, not self.include_fruit]):
+                self.ghosts.inky.inactive = False
+                self.ghosts.clyde.inactive = False
+                return
+            
         if self.include_pacdots or self.include_powerdots:
-            self.dots = PacDots()
+            self.pacdots = PacDots()
         if self.include_fruit:
             self.fruit.available = False
 
