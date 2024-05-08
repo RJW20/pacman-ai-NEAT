@@ -44,7 +44,7 @@ class Playback:
         caption = [(ghosts, 'ghosts'), (pacdots, 'pacdots'), (powerdots, 'powerdots'), (fruit, 'fruit')]
         pygame.display.set_caption("PacMan: Playback with " + ", ".join([inclusion[1] for inclusion in caption if inclusion[0]]))
         pygame.font.init()
-        font_height = int(0.06 * screen_size[1])
+        font_height = int(0.04 * screen_size[1])
         self.stats_font = pygame.font.Font(pygame.font.get_default_font(), int(0.7 * font_height))
         self.clock = pygame.time.Clock()
         self.base_speed = 60
@@ -237,17 +237,17 @@ class Playback:
 
         # Show the gen
         gen = self.stats_font.render(f'Gen: {self.players.generation}', True, 'white')
-        gen_rect = gen.get_rect(topleft=(self.tile_size, self.tile_size))
+        gen_rect = gen.get_rect(topleft=(self.tile_size, 0.5 * self.tile_size))
         self.screen.blit(gen, gen_rect)
 
         # Show the species_no
         species_no = self.stats_font.render(f'Species: {self.players.species_no + 1}', True, 'white')
-        species_no_rect = gen.get_rect(topleft=(self.tile_size, 3 * self.tile_size))
+        species_no_rect = gen.get_rect(topleft=(self.tile_size, 1.5 * self.tile_size))
         self.screen.blit(species_no, species_no_rect)
 
         # Show the speed
         speed = self.stats_font.render(f'Speed: {self.speed_multiplier}x', True, 'white')
-        speed_rect = speed.get_rect(topright=(29 * self.tile_size, self.tile_size))
+        speed_rect = speed.get_rect(topright=(29 * self.tile_size, 0.5 * self.tile_size))
         self.screen.blit(speed, speed_rect)
 
         # Update the screen
