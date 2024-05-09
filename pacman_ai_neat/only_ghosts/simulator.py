@@ -15,6 +15,8 @@ def simulate(pacman: Player) -> Player:
     ghosts = Ghosts(pacman, blinky, pinky, inky, clyde)
     pacman.initialise()
     ghosts.initialise()
+    ghosts.inky.inactive = False
+    ghosts.clyde.inactive = False
 
     fitness = 0
     while not pacman.dead:
