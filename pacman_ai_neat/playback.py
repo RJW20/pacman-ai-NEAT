@@ -97,6 +97,7 @@ class Playback:
 
         self.pacman.initialise()
         if self.include_ghosts:
+            self.ghosts.pacman = self.pacman
             self.ghosts.initialise()
 
             # If only ghosts then have all active from the start
@@ -109,7 +110,6 @@ class Playback:
             self.pacdots = PacDots()
         if self.include_fruit:
             self.fruit.available = False
-
 
     def check_key_press(self) -> Direction:
         """Check for new key presses."""
