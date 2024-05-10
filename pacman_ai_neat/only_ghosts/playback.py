@@ -1,6 +1,6 @@
 from pacman_ai_neat.playback import Playback
-from settings import settings
-from playback_player import PlaybackPlayer
+from pacman_ai_neat.only_ghosts.settings import settings
+from pacman_ai_neat.only_ghosts.playback_player import PlaybackPlayer
 
 from neat.settings import settings_handler
 

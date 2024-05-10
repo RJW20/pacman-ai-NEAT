@@ -20,7 +20,7 @@ def simulate(pacman: Player) -> Player:
     ghosts.clyde.inactive = False
 
     fitness = 0
-    prev_position = pacman.position
+    prev_tile = pacman.position.tile_pos
     stationary_count = 0
     MAX_SC = simulation_settings['max_stationary_count']
     while not pacman.dead:
@@ -32,13 +32,13 @@ def simulate(pacman: Player) -> Player:
         ghosts.check_collision()
         fitness += 1
 
-        if pacman.position == prev_position:
+        if pacman.position.tile_pos == prev_tile:
             stationary_count += 1
             if stationary_count == MAX_SC:
                 break
         else:
             stationary_count = 0
-            prev_position = pacman.position
+            prev_tile = pacman.position.tile_pos
 
     pacman.fitness = fitness
     return pacman
