@@ -119,3 +119,10 @@ settings = {
     'playback_settings': playback_settings,
 
 }
+
+
+simulation_settings = {
+
+    'max_stationary_count': 20,
+
+}
