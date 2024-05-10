@@ -1,6 +1,6 @@
 from pacman_ai_neat.only_ghosts.player import Player
 from pacman_ai_neat.only_ghosts.settings import simulation_settings
-from pacman_app import Ghosts, Blinky, Pinky, Inky, Clyde
+from pacman_app import PacDots
 
 
 def simulate(pacman: Player) -> Player:
@@ -9,28 +9,23 @@ def simulate(pacman: Player) -> Player:
     Assigns a fitness that is simply the number of frames PacMan lives for.
     """
 
-    blinky = Blinky(pacman)
-    pinky = Pinky(pacman)
-    inky = Inky(pacman)
-    clyde = Clyde(pacman)
-    ghosts = Ghosts(pacman, blinky, pinky, inky, clyde)
-    pacman.initialise()
-    ghosts.initialise()
-    ghosts.inky.inactive = False
-    ghosts.clyde.inactive = False
 
-    fitness = 0
+    pacman.initialise()
+    pacdots = PacDots()
+
+    lifespan = 0
     prev_tile = pacman.position.tile_pos
     stationary_count = 0
     MAX_SC = simulation_settings['max_stationary_count']
     while not pacman.dead:
 
-        pacman.look(ghosts)
+        pacman.look(pacdots)
         move = pacman.think()
-        ghosts.move()
         pacman.move(move)
-        ghosts.check_collision()
-        fitness += 1
+        if pacdots.check_if_eaten(pacman):
+            pacman.score += 10
+            pacman.move_next = False
+        lifespan += 1
 
         if pacman.position.tile_pos == prev_tile:
             stationary_count += 1
@@ -40,5 +35,5 @@ def simulate(pacman: Player) -> Player:
             stationary_count = 0
             prev_tile = pacman.position.tile_pos
 
-    pacman.fitness = fitness
+    pacman.fitness = pacman.score * 100 / lifespan
     return pacman

@@ -79,9 +79,9 @@ progress_settings = {
     # For bests and averages these must be attributes of the Player class you use
     # The Player class will always have the fitness attribute
     # Attributes to keep track of the Population's best
-    'bests': None,  # Default = ['fitness']
+    'bests': ['score', 'fitness'],  # Default = ['fitness']
     # Attributes to keep track of the Population' average
-    'averages': None,    # Default = ['fitness']
+    'averages': ['score', 'fitness'],    # Default = ['fitness']
     # Choose whether to include the number of Species in the progress report
     'include_species': None, # Default = True
 
