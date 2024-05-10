@@ -1,6 +1,6 @@
 import neat
 
-from pacman_ai_neat.only_ghosts import Player, simulate, settings
+from pacman_ai_neat.only_dots import Player, simulate, settings
 
 
 def main() -> None:
