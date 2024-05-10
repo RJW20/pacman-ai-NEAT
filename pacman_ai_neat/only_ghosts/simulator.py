@@ -35,8 +35,7 @@ def simulate(pacman: Player) -> Player:
         if pacman.position == prev_position:
             stationary_count += 1
             if stationary_count == MAX_SC:
-                pacman.fitness = fitness
-                return
+                break
         else:
             stationary_count = 0
             prev_position = pacman.position
