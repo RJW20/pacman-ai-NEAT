@@ -209,16 +209,14 @@ class Playback:
 
         # Draw dots first so characters drawn oven them
         if self.include_pacdots:
-            for dot_x, dot_ys in self.pacdots.dots.items():
-                for dot_y in dot_ys:
-                    dot_position = to_pixels((dot_x, dot_y), self.tile_size)
-                    pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.2)
+            for dot in self.pacdots.dots:
+                dot_position = to_pixels(dot, self.tile_size)
+                pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.2)
 
         if self.include_powerdots:
-            for dot_x, dot_ys in self.pacdots.power_dots.items():
-                for dot_y in dot_ys:
-                    dot_position = to_pixels((dot_x, dot_y), self.tile_size)
-                    pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.35)
+            for dot in self.pacdots.power_dots:
+                dot_position = to_pixels(dot, self.tile_size)
+                pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.35)
 
         # Draw fruit
         if self.include_fruit and self.fruit.available:
