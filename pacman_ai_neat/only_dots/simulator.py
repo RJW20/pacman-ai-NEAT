@@ -1,5 +1,5 @@
-from pacman_ai_neat.only_ghosts.player import Player
-from pacman_ai_neat.only_ghosts.settings import simulation_settings
+from pacman_ai_neat.only_dots.player import Player
+from pacman_ai_neat.only_dots.settings import simulation_settings
 from pacman_app import PacDots
 
 
@@ -14,6 +14,7 @@ def simulate(pacman: Player) -> Player:
     pacdots = PacDots()
 
     lifespan = 0
+    MAX_LIFESPAN = simulation_settings['max_lifespan']
     prev_tile = pacman.position.tile_pos
     stationary_count = 0
     MAX_SC = simulation_settings['max_stationary_count']
@@ -30,10 +31,17 @@ def simulate(pacman: Player) -> Player:
         if pacman.position.tile_pos == prev_tile:
             stationary_count += 1
             if stationary_count == MAX_SC:
+                lifespan = 10 * MAX_LIFESPAN
                 break
         else:
             stationary_count = 0
             prev_tile = pacman.position.tile_pos
 
-    pacman.fitness = pacman.score * 100 / lifespan
+
+        if pacman.score == 2400:
+            break
+        elif lifespan == MAX_LIFESPAN:
+            break
+
+    pacman.fitness = pacman.score * 1000 / lifespan
     return pacman
