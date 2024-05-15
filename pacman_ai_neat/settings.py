@@ -14,7 +14,7 @@ player_args = {}
 genome_settings = {
 
     # The number of inputs for the Neural Network
-    'input_count': 8,
+    'input_count': 20,
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
@@ -113,7 +113,7 @@ settings = {
     # Choose which phase to train
     'phase': 'only_dots',   # Options are ['only_dots']
     # Define whether starting a new phase so that loading is handled correctly
-    'is_new_phase': True,   # Should be False if first phase
+    'is_new_phase': False,   # Should be False if first phase
 
     'player_args': player_args,
     'genome_settings': genome_settings,
