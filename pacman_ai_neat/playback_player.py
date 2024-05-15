@@ -3,7 +3,7 @@ import pygame
 from pacman_app.map import Direction
 from pacman_app.pixels import to_pixels
 
-from pacman_ai_neat.only_dots.player import Player
+from pacman_ai_neat.player import Player
 
 
 class PlaybackPlayer(Player):
