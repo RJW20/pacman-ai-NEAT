@@ -32,7 +32,7 @@ population_settings = {
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
     # Folder to save each generation to (overwritten each time) so the program can be paused and resumed
-    'save_folder': 'latest_pop_dots_only',
+    'save_folder': 'latest_pop',
 
 }
 
@@ -91,9 +91,9 @@ progress_settings = {
 playback_settings = {
 
     # Folder to save the top performing Genomes of each generation to
-    'save_folder': 'playback_dots_only',  # Default = 'playback'
+    'save_folder': 'playback',  # Default = 'playback'
     # The number of Genomes from each Species to save (set to -1 for all)
-    'number': 0,   # Default = 1
+    'number': 1,   # Default = 1
 
 }
 
@@ -105,10 +105,15 @@ settings = {
     'creation_type': 'new', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     # Only the player_args, progress_settings and playback_settings will be replaced
-    'load_all_settings': True,
+    'load_all_settings': False,
     # The number of generations to run the Population until
     # A loaded Population will remember the generation it was saved at and still only run till this number
     'total_generations': 200,
+
+    # Choose which phase to train
+    'phase': 'only_dots',   # Options are ['only_dots']
+    # Define whether starting a new phase so that loading is handled correctly
+    'is_new_phase': True,   # Should be False if first phase
 
     'player_args': player_args,
     'genome_settings': genome_settings,

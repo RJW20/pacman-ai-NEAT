@@ -4,7 +4,7 @@ from pacman_app import Ghosts, Blinky, Pinky, Inky, Clyde
 
 
 def simulate(pacman: Player) -> Player:
-    """Run PacMan in the game with only ghosts.
+    """Run PacMan in the game with only PacDots.
     
     Assigns a fitness that is simply the number of frames PacMan lives for.
     """
@@ -20,6 +20,7 @@ def simulate(pacman: Player) -> Player:
     ghosts.clyde.inactive = False
 
     fitness = 0
+    MAX_LIFESPAN = simulation_settings['max_lifespan']
     prev_tile = pacman.position.tile_pos
     stationary_count = 0
     MAX_SC = simulation_settings['max_stationary_count']
@@ -39,6 +40,9 @@ def simulate(pacman: Player) -> Player:
         else:
             stationary_count = 0
             prev_tile = pacman.position.tile_pos
+
+        if fitness == MAX_LIFESPAN:
+            break
 
     pacman.fitness = fitness
     return pacman

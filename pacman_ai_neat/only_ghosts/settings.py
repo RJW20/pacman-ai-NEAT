@@ -14,7 +14,7 @@ player_args = {}
 genome_settings = {
 
     # The number of inputs for the Neural Network
-    'input_count': 14,
+    'input_count': 8,
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
@@ -32,7 +32,7 @@ population_settings = {
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
     # Folder to save each generation to (overwritten each time) so the program can be paused and resumed
-    'save_folder': 'latest_pop',
+    'save_folder': 'latest_pop_ghosts_only',
 
 }
 
@@ -91,7 +91,7 @@ progress_settings = {
 playback_settings = {
 
     # Folder to save the top performing Genomes of each generation to
-    'save_folder': None,  # Default = 'playback'
+    'save_folder': 'playback_ghosts_only',  # Default = 'playback'
     # The number of Genomes from each Species to save (set to -1 for all)
     'number': 1,   # Default = 1
 
@@ -124,5 +124,6 @@ settings = {
 simulation_settings = {
 
     'max_stationary_count': 50,
+    'max_lifespan': 10000,
 
 }
