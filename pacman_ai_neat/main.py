@@ -16,11 +16,11 @@ def main() -> None:
         phase_transition(phase, settings)
 
     # Set the playback folder
-    playback_folder = settings['playback']['save_folder']
+    playback_folder = settings['playback_settings']['save_folder']
     if playback_folder:
-        settings['playback']['save_folder'] += f'/{phase.name.lower()}'
+        settings['playback_settings']['save_folder'] += f'/{phase.name.lower()}'
     else:
-        settings['playback']['save_folder'] = f'playback/{phase.name.lower()}'
+        settings['playback_settings']['save_folder'] = f'playback/{phase.name.lower()}'
 
     neat.run(
         PlayerClass=Player,

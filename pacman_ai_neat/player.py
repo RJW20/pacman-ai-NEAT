@@ -20,7 +20,7 @@ class Player(PacMan, BasePlayer):
             directions.append(Direction(Vector(-directions[-1].value.d_y, directions[-1].value.d_x)))
         return directions
     
-    def in_bounds(tile: tuple[int,int]) -> bool:
+    def in_bounds(self, tile: tuple[int,int]) -> bool:
         """Return True if the given tile is in the PacMaze."""
 
         if tile[0] < 2 or tile[0] > 27 or tile[1] < 4 or tile[1] > 32:
