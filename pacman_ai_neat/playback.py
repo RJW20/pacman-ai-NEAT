@@ -30,7 +30,7 @@ class Playback:
     ) -> None:
         
         # Store our current phase
-        self.include_pacdots, self.include_fruit, self.include_ghosts, self.include_powerdots = phase.value
+        self.include_pacdots, self.include_fruit, self.include_ghosts, self.include_powerdots = phase.inclusions
 
         # Pygame set up
         width = 532
