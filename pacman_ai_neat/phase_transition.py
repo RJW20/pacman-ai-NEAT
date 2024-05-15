@@ -29,6 +29,7 @@ def phase_transition(new_phase: Phase, settings: dict) -> None:
     population.species.sort(key=lambda specie: specie.best_fitness, reverse=True)
     best_genome = population.species[0].rep
     best_player = population.player_factory.empty_player()
+    best_player.fitness = 1
     best_player.genome = best_genome
 
     # Remove the species
