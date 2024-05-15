@@ -24,5 +24,4 @@ class Phase(Enum):
 
     @property
     def simulator_function(self) -> Callable[[Player], Player]:
-        return self._simulator_function_
-    
+        return self._simulator_function_ 
