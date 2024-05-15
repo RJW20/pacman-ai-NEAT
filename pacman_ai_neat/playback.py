@@ -10,6 +10,8 @@ from pacman_app.pixels import to_pixels
 
 from neat import PlaybackPlayers
 
+from pacman_ai_neat.phase import Phase
+
 
 class Playback:
     """Controller of all objects that are present in the Playback.
@@ -23,26 +25,19 @@ class Playback:
         self,
         playback_folder: str,
         playback_player: type,
-        player_args,
-        ghosts: bool,
-        pacdots: bool,
-        powerdots: bool,
-        fruit: bool,
+        player_args: dict,
+        phase: Phase,
     ) -> None:
         
-        # Store our current mode
-        self.include_ghosts = ghosts
-        self.include_pacdots = pacdots
-        self.include_powerdots = powerdots
-        self.include_fruit = fruit
+        # Store our current phase
+        self.include_pacdots, self.include_fruit, self.include_ghosts, self.include_powerdots = phase.value
 
         # Pygame set up
         width = 532
         self.tile_size = width // 28
         screen_size = (self.tile_size * 30, self.tile_size * 36)
         self.screen = pygame.display.set_mode(screen_size)
-        caption = [(ghosts, 'ghosts'), (pacdots, 'pacdots'), (powerdots, 'powerdots'), (fruit, 'fruit')]
-        pygame.display.set_caption("PacMan: Playback with " + ", ".join([inclusion[1] for inclusion in caption if inclusion[0]]))
+        pygame.display.set_caption(f'PacMan: Playback of Phase {phase.__name__}')
         pygame.font.init()
         font_height = int(0.04 * screen_size[1])
         self.stats_font = pygame.font.Font(pygame.font.get_default_font(), int(0.7 * font_height))
@@ -66,26 +61,20 @@ class Playback:
         self.pacman.initialise()
 
         # Ghosts set up
-        if self.include_ghosts:
-            blinky = BlinkySprite(self.pacman, spritesheet)
-            pinky = PinkySprite(self.pacman, spritesheet)
-            inky = InkySprite(self.pacman, spritesheet)
-            clyde = ClydeSprite(self.pacman, spritesheet)
-            self.ghosts = Ghosts(self.pacman, blinky, pinky, inky, clyde)
-            self.ghosts.initialise()
+        blinky = BlinkySprite(self.pacman, spritesheet)
+        pinky = PinkySprite(self.pacman, spritesheet)
+        inky = InkySprite(self.pacman, spritesheet)
+        clyde = ClydeSprite(self.pacman, spritesheet)
+        self.ghosts = Ghosts(self.pacman, blinky, pinky, inky, clyde)
+        self.ghosts.initialise()
+        if not self.include_ghosts:
+            self.ghosts.blinky.inactive = True
 
-            # If only ghosts then have all active from the start
-            if all([not self.include_pacdots, not self.include_powerdots, not self.include_fruit]):
-                self.ghosts.inky.inactive = False
-                self.ghosts.clyde.inactive = False
-
-        # Dot set up
-        if self.include_pacdots or self.include_powerdots:        
-            self.pacdots = PacDots()
+        # Dot set up        
+        self.pacdots = PacDots()
 
         # Fruit set up
-        if self.include_fruit:
-            self.fruit = FruitSprite(spritesheet)
+        self.fruit = FruitSprite(spritesheet)
 
     @property
     def pacman(self) -> PacMan:
@@ -96,15 +85,12 @@ class Playback:
         """Return all game objects to starting state."""
 
         self.pacman.initialise()
+
         if self.include_ghosts:
+            for ghost in self.ghosts:
+                ghost.pacman = self.pacman
             self.ghosts.pacman = self.pacman
             self.ghosts.initialise()
-
-            # If only ghosts then have all active from the start
-            if all([not self.include_pacdots, not self.include_powerdots, not self.include_fruit]):
-                self.ghosts.inky.inactive = False
-                self.ghosts.clyde.inactive = False
-                return
             
         if self.include_pacdots or self.include_powerdots:
             self.pacdots = PacDots()
@@ -145,10 +131,7 @@ class Playback:
         """Advance to the next frame."""
 
         # Move PacMan
-        if self.include_ghosts:
-            self.pacman.look(self.ghosts)
-        else:
-            self.pacman.look()
+        self.pacman.look(self.pacdots, self.fruit, self.ghosts)
         move = self.pacman.think()
         self.pacman.move(move)
 
