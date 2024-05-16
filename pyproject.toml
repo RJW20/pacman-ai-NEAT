@@ -13,6 +13,7 @@ pacman_app = { path = "submodules/pacman-app/", develop = true }
 
 [tool.poetry.scripts]
 main = "pacman_ai_neat.main:main"
+playback = "pacman_ai_neat.playback:playback"
 
 [build-system]
 requires = ["poetry-core"]
