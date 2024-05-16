@@ -34,7 +34,7 @@ class Player(PacMan, BasePlayer):
         Can see the below in the 4 cardinal directions (in the order from self.perspective):
         - whether it can move in the direction (4 one-hot values)
         - whether there is a PacDot (4 one-hot values)
-        - whether the fruit is in the direction if available (4 one-hot values)
+        - whether the fruit is in the direction if available (4 one-hot values) *not yet
         - whether there is an active ghost (4 one-hot values)
         - whether there is a frightened ghost (4 one-hot values)
         """
@@ -48,7 +48,7 @@ class Player(PacMan, BasePlayer):
 
         # Others
         pacdot_vision = []
-        fruit_vision = []
+        #fruit_vision = []
         a_ghost_vision = []
         f_ghost_vision = []
         a_ghost_positions = set(ghost.position.tile_pos for ghost in ghosts if not ghost.inactive and not ghost.mode == Mode.RETURN_TO_HOME)
@@ -56,18 +56,19 @@ class Player(PacMan, BasePlayer):
         for direction in directions:
 
             dot_found = False
-            fruit_found = False
+            #fruit_found = False
             ghost_found = False
             next_tile = self.position.tile_x + direction.value.d_x, self.position.tile_y + direction.value.d_y
-            while self.in_bounds(next_tile) and not all([dot_found, fruit_found, ghost_found]):
+            #while self.in_bounds(next_tile) and not all([dot_found, fruit_found, ghost_found]):
+            while self.in_bounds(next_tile) and not all([dot_found, ghost_found]):
 
                 # Dots
                 if not dot_found and next_tile in pacdots.dots:
                     dot_found = True
                 
                 # Fruit
-                if not fruit_found and next_tile == fruit.position.tile_pos:
-                    fruit_found = True
+                #if not fruit_found and next_tile == fruit.position.tile_pos:
+                #    fruit_found = True
                 
                 # Ghosts
                 if not ghost_found:
@@ -83,9 +84,13 @@ class Player(PacMan, BasePlayer):
                 next_tile = next_tile[0] + direction.value.d_x, next_tile[1] + direction.value.d_y
 
             pacdot_vision.append(int(dot_found))
-            fruit_vision.append(int(fruit_found))
+            #fruit_vision.append(int(fruit_found))
+            if not ghost_found:
+                a_ghost_vision.append(0)
+                f_ghost_vision.append(0)
 
-        self.vision.extend(pacdot_vision + fruit_vision + a_ghost_vision + f_ghost_vision)
+        #self.vision.extend(pacdot_vision + fruit_vision + a_ghost_vision + f_ghost_vision)
+        self.vision.extend(pacdot_vision + a_ghost_vision + f_ghost_vision)
 
     def think(self) -> Direction:
         """Feed the input into the Genome and return the output as a valid move."""

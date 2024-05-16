@@ -14,7 +14,7 @@ player_args = {}
 genome_settings = {
 
     # The number of inputs for the Neural Network
-    'input_count': 20,
+    'input_count': 16,
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
@@ -26,7 +26,7 @@ genome_settings = {
 population_settings = {
 
     # The number of Players per generation
-    'size': 500,
+    'size': 250,
     # The percentage of Players to remove from each Species before creating offspring each generation
     'cull_percentage': None,    # Default = 0.5
     # The number of generations to go without improvement before removing all but the 2 best performing Species
@@ -102,7 +102,7 @@ settings = {
 
     # Choose whether to start a Population of Players with randomized Genomes or load a previous save
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
-    'creation_type': 'new', # Options are ['new', 'load']
+    'creation_type': 'load', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     # Only the player_args, progress_settings and playback_settings will be replaced
     'load_all_settings': False,
