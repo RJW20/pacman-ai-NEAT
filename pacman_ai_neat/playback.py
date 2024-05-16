@@ -9,8 +9,11 @@ from pacman_app.map import Direction
 from pacman_app.pixels import to_pixels
 
 from neat import PlaybackPlayers
+from neat.settings import settings_handler
 
 from pacman_ai_neat.phase import Phase
+from pacman_ai_neat.settings import settings
+from pacman_ai_neat.playback_player import PlaybackPlayer
 
 
 class Playback:
@@ -37,7 +40,7 @@ class Playback:
         self.tile_size = width // 28
         screen_size = (self.tile_size * 30, self.tile_size * 36)
         self.screen = pygame.display.set_mode(screen_size)
-        pygame.display.set_caption(f'PacMan: Playback of Phase {phase.__name__}')
+        pygame.display.set_caption(f'PacMan: Playback of Phase {phase.name}')
         pygame.font.init()
         font_height = int(0.04 * screen_size[1])
         self.stats_font = pygame.font.Font(pygame.font.get_default_font(), int(0.7 * font_height))
@@ -248,3 +251,14 @@ class Playback:
                 self.new_episode()
 
             self.clock.tick(self.base_speed * self.speed_multiplier)
+
+
+def playback() -> None:
+
+    handled_settings = settings_handler(settings, silent=True)
+
+    phase = Phase[settings['phase'].upper()]
+    playback_folder = handled_settings['playback_settings']['save_folder'] + f'/{phase.name.lower()}'
+    player_args = handled_settings['player_args']
+    pb = Playback(playback_folder, PlaybackPlayer, player_args, phase)
+    pb.run()
