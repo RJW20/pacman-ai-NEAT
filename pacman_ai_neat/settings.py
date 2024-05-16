@@ -102,7 +102,7 @@ settings = {
 
     # Choose whether to start a Population of Players with randomized Genomes or load a previous save
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
-    'creation_type': 'load', # Options are ['new', 'load']
+    'creation_type': 'new', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     # Only the player_args, progress_settings and playback_settings will be replaced
     'load_all_settings': False,
@@ -129,6 +129,6 @@ settings = {
 simulation_settings = {
 
     'max_stationary_count': 20,
-    'max_lifespan': 10000,
+    'max_famine_count': 1500,
 
 }
