@@ -111,7 +111,7 @@ settings = {
     'total_generations': 200,
 
     # Choose which phase to train
-    'phase': 'dots_and_ghosts',   # Options are ['only_dots', 'dots_and_ghosts']
+    'phase': 'full_game',   # Options are ['only_dots', 'dots_and_ghosts', 'full_game']
     # Define whether starting a new phase so that loading is handled correctly
     'is_new_phase': True,   # Should be False if first phase
 
