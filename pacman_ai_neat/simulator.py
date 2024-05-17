@@ -70,6 +70,19 @@ def simulate(pacman: Player) -> Player:
                 ghosts.blinky.elroy = 1
             elif pacdots.remaining == ghosts.blinky.elroy_second_threshold:
                 ghosts.blinky.elroy = 2
+            elif pacdots.remaining == fruit.first_threshold:
+                fruit.available = True
+            elif pacdots.remaining == fruit.second_threshold:
+                fruit.available = True
+
+        # Update fruit
+        if fruit.available:
+            if pacman.collided_with(fruit):
+                pacman.score += 100
+                fruit.available = False
+            elif fruit.available_countdown == 0:
+                fruit.available = False
+            fruit.available_countdown -= 1
 
         # Update stationary_count
         if pacman.position.tile_pos == prev_tile:

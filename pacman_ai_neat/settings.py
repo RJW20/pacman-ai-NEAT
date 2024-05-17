@@ -123,4 +123,7 @@ settings = {
 
 simulation_settings = {
 
+    'max_stationary_count': 20,
+    'max_famine_count': 1500,
+
 }
