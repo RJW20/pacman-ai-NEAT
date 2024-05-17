@@ -110,11 +110,6 @@ settings = {
     # A loaded Population will remember the generation it was saved at and still only run till this number
     'total_generations': 200,
 
-    # Choose which phase to train
-    'phase': 'full_game',   # Options are ['only_dots', 'dots_and_ghosts', 'full_game']
-    # Define whether starting a new phase so that loading is handled correctly
-    'is_new_phase': True,   # Should be False if first phase
-
     'player_args': player_args,
     'genome_settings': genome_settings,
     'population_settings': population_settings,
@@ -127,8 +122,5 @@ settings = {
 
 
 simulation_settings = {
-
-    'max_stationary_count': 20,
-    'max_famine_count': 1500,
 
 }
