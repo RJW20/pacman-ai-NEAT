@@ -2,7 +2,8 @@ from functools import partial
 
 from pacman_app import PacMan, PacDots, Fruit, Ghosts
 from pacman_app.characters.ghosts.mode import Mode
-from pacman_app.map import MAP, Tile, Direction
+from pacman_app.map import MAP, Tile
+from pacman_app.map.direction import Direction, Vector
 from neat import BasePlayer
 
 
@@ -81,7 +82,20 @@ class Player(PacMan, BasePlayer):
         # Prepare the list of tiles to look at
         pacman_x = self.position.tile_x
         pacman_y = self.position.tile_y
-        tiles = [(x,y) for x in range(pacman_x - 5, pacman_x + 6) for y in range(pacman_y - 5, pacman_y + 6) if x != pacman_x and y != pacman_y]
+        match(self.direction):
+
+            case Direction.UP:
+                tiles = [(x,y) for y in range(pacman_y - 5, pacman_y + 6) for x in range(pacman_x - 5, pacman_x + 6) if not (x, y) == (pacman_x, pacman_y)]
+
+            case Direction.RIGHT:
+                tiles = [(x,y) for x in range(pacman_x + 5, pacman_x - 6, -1) for y in range(pacman_y - 5, pacman_y + 6) if not (x, y) == (pacman_x, pacman_y)]
+
+            case Direction.DOWN:
+                tiles = [(x,y) for y in range(pacman_y + 5, pacman_y - 6, -1) for x in range(pacman_x + 5, pacman_x - 6, -1) if not (x, y) == (pacman_x, pacman_y)]
+
+            case Direction.LEFT:
+                tiles = [(x,y) for x in range(pacman_x - 5, pacman_x + 6) for y in range(pacman_y + 5, pacman_y - 6, -1) if not (x, y) == (pacman_x, pacman_y)]
+
 
         self.vision =list(map(
             partial(
@@ -94,12 +108,19 @@ class Player(PacMan, BasePlayer):
             tiles
         ))
 
+    @property
+    def perspective(self) -> list[Direction]:
+        """Return a list containing the Directions corresponding to PacMan's forward, right, 
+        back and left."""
+
+        directions = [self.direction]
+        for _ in range(3):
+            directions.append(Direction(Vector(-directions[-1].value.d_y, directions[-1].value.d_x)))
+        return directions
 
     def think(self) -> Direction:
         """Feed the input into the Genome and return the output as a valid move."""
 
         choices = self.genome.propagate(self.vision)
         choice = max(enumerate(choices), key = lambda choice: choice[1])[0]
-        directions = [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]
-
-        return directions[choice]
+        return self.perspective[choice]

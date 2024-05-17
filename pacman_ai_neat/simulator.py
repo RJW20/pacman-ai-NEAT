@@ -52,11 +52,11 @@ def simulate(pacman: Player) -> Player:
             pacman.score += 10
             pacman.move_next = False
             famine_count = 0
-        elif pacdots.check_if_powered(pacman):
-            dots_changed = True
-            pacman.score += 50
-            pacman.move_next = False
-            ghosts.frightened = True
+        #elif pacdots.check_if_powered(pacman):
+        #    dots_changed = True
+        #    pacman.score += 50
+        #    pacman.move_next = False
+        #    ghosts.frightened = True
         else:
             famine_count += 1
 
@@ -96,5 +96,5 @@ def simulate(pacman: Player) -> Player:
     elif stationary_count == MAX_STATIONARY_COUNT:
         lifespan -= MAX_STATIONARY_COUNT
 
-    pacman.fitness = (pacman.score // 10) ** 2 * (lifespan // 1000)
+    pacman.fitness = (pacman.score // 10) * (lifespan / 100)
     return pacman
