@@ -43,7 +43,7 @@ species_settings = {
     'excess_coefficient': None, # Default = 1
     'disjoint_coefficient': None, # Default = 1
     'weight_difference_coefficient': None,  # Default = 0.4
-    'compatibility_threshold': None,    # Default = 3
+    'compatibility_threshold': 1,    # Default = 3
 
     # The number of generations a Species can go without improvement before being removed
     'max_staleness': None,  # Default = 15
