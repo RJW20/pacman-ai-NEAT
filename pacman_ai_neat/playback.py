@@ -139,11 +139,11 @@ class Playback:
             self.pacman.score += 10
             self.pacman.move_next = False
             dots_changed = True
-        if self.pacdots.check_if_powered(self.pacman):
-            self.pacman.score += 50
-            self.pacman.move_next = False
-            self.ghosts.frightened = True
-            dots_changed = True
+        #if self.pacdots.check_if_powered(self.pacman):
+        #    self.pacman.score += 50
+        #    self.pacman.move_next = False
+        #    self.ghosts.frightened = True
+        #    dots_changed = True
 
         # Check for dot checkpoints
         if dots_changed:

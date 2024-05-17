@@ -34,7 +34,7 @@ def simulate(pacman: Player) -> Player:
     MAX_FAMINE_COUNT = simulation_settings['max_famine_count']
     MAX_STATIONARY_COUNT = simulation_settings['max_stationary_count']
     prev_tile = pacman.position.tile_pos
-    while not pacman.dead and famine_count < MAX_FAMINE_COUNT and stationary_count < MAX_STATIONARY_COUNT:
+    while famine_count < MAX_FAMINE_COUNT and stationary_count < MAX_STATIONARY_COUNT and not pacman.dead:
 
         pacman.look(pacdots, fruit, ghosts)
         move = pacman.think()
@@ -89,6 +89,7 @@ def simulate(pacman: Player) -> Player:
             stationary_count += 1
         else:
             stationary_count = 0
+            prev_tile = pacman.position.tile_pos
 
     # Alter lifespans to be true lifespan
     if famine_count == MAX_FAMINE_COUNT:
