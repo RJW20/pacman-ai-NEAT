@@ -224,5 +224,5 @@ def full_game(pacman: Player) -> Player:
     elif stationary_count == MAX_STATIONARY_COUNT:
         lifespan -= MAX_STATIONARY_COUNT
 
-    pacman.fitness = (pacman.score // 10) ** 2 * (lifespan // 10)
+    pacman.fitness = (pacman.score // 10) ** 2 * (lifespan // 1000)
     return pacman

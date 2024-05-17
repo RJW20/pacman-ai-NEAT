@@ -144,21 +144,20 @@ class Playback:
             self.ghosts.check_collision()
 
         # Update pacdots
+        dots_changed = False
         if self.include_pacdots:
-            dots_changed = False
             if self.pacdots.check_if_eaten(self.pacman):
                 self.pacman.score += 10
                 self.pacman.move_next = False
                 dots_changed = True
         if self.include_powerdots:
-            dots_changed = False
             if self.pacdots.check_if_powered(self.pacman):
                 self.pacman.score += 50
                 self.pacman.move_next = False
                 self.ghosts.frightened = True
                 dots_changed = True
 
-        # Check for dot checkpoints 
+        # Check for dot checkpoints
         if self.include_pacdots and dots_changed:
 
             if self.include_ghosts:
