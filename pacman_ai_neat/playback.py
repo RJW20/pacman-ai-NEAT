@@ -11,6 +11,7 @@ from pacman_app.pixels import to_pixels
 from neat import PlaybackPlayers
 from neat.settings import settings_handler
 
+from pacman_ai_neat.phase import Phase
 from pacman_ai_neat.settings import settings
 from pacman_ai_neat.playback_player import PlaybackPlayer
 
@@ -28,14 +29,18 @@ class Playback:
         playback_folder: str,
         playback_player: type,
         player_args: dict,
+        phase: Phase,
     ) -> None:
+        
+        # Store our current phase
+        self.include_pacdots, self.include_fruit, self.include_ghosts, self.include_powerdots = phase.inclusions
 
         # Pygame set up
         width = 532
         self.tile_size = width // 28
         screen_size = (self.tile_size * 30, self.tile_size * 36)
         self.screen = pygame.display.set_mode(screen_size)
-        pygame.display.set_caption('PacMan: NEAT playback')
+        pygame.display.set_caption(f'PacMan: Playback of Phase {phase.name}')
         pygame.font.init()
         font_height = int(0.04 * screen_size[1])
         self.stats_font = pygame.font.Font(pygame.font.get_default_font(), int(0.7 * font_height))
@@ -65,6 +70,8 @@ class Playback:
         clyde = ClydeSprite(self.pacman, spritesheet)
         self.ghosts = Ghosts(self.pacman, blinky, pinky, inky, clyde)
         self.ghosts.initialise()
+        if not self.include_ghosts:
+            self.ghosts.blinky.inactive = True
 
         # Dot set up        
         self.pacdots = PacDots()
@@ -82,14 +89,16 @@ class Playback:
 
         self.pacman.initialise()
 
-        for ghost in self.ghosts:
-            ghost.pacman = self.pacman
-        self.ghosts.pacman = self.pacman
-        self.ghosts.initialise()
+        if self.include_ghosts:
+            for ghost in self.ghosts:
+                ghost.pacman = self.pacman
+            self.ghosts.pacman = self.pacman
+            self.ghosts.initialise()
             
-        self.pacdots = PacDots()
-        
-        self.fruit.available = False
+        if self.include_pacdots or self.include_powerdots:
+            self.pacdots = PacDots()
+        if self.include_fruit:
+            self.fruit.available = False
 
     def check_key_press(self) -> Direction:
         """Check for new key presses."""
@@ -130,46 +139,52 @@ class Playback:
         self.pacman.move(move)
 
         # Move ghosts and check collisions
-        self.ghosts.move()
-        self.ghosts.check_collision()
+        if self.include_ghosts:
+            self.ghosts.move()
+            self.ghosts.check_collision()
 
         # Update pacdots
         dots_changed = False
-        if self.pacdots.check_if_eaten(self.pacman):
-            self.pacman.score += 10
-            self.pacman.move_next = False
-            dots_changed = True
-        #if self.pacdots.check_if_powered(self.pacman):
-        #    self.pacman.score += 50
-        #    self.pacman.move_next = False
-        #    self.ghosts.frightened = True
-        #    dots_changed = True
+        if self.include_pacdots:
+            if self.pacdots.check_if_eaten(self.pacman):
+                self.pacman.score += 10
+                self.pacman.move_next = False
+                dots_changed = True
+        if self.include_powerdots:
+            if self.pacdots.check_if_powered(self.pacman):
+                self.pacman.score += 50
+                self.pacman.move_next = False
+                self.ghosts.frightened = True
+                dots_changed = True
 
         # Check for dot checkpoints
-        if dots_changed:
+        if self.include_pacdots and dots_changed:
 
-            if self.pacdots.remaining == 214:
-                self.ghosts.inky.inactive = False
-            elif self.pacdots.remaining == 184:
-                self.ghosts.clyde.inactive = False
-            elif self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
-                self.ghosts.blinky.elroy = 1
-            elif self.pacdots.remaining == self.ghosts.blinky.elroy_second_threshold:
-                self.ghosts.blinky.elroy = 2
+            if self.include_ghosts:
+                if self.pacdots.remaining == 214:
+                    self.ghosts.inky.inactive = False
+                elif self.pacdots.remaining == 184:
+                    self.ghosts.clyde.inactive = False
+                elif self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
+                    self.ghosts.blinky.elroy = 1
+                elif self.pacdots.remaining == self.ghosts.blinky.elroy_second_threshold:
+                    self.ghosts.blinky.elroy = 2
 
-            if self.pacdots.remaining == self.fruit.first_threshold:
-                self.fruit.available = True
-            elif self.pacdots.remaining == self.fruit.second_threshold:
-                self.fruit.available = True
+            if self.include_fruit:
+                if self.pacdots.remaining == self.fruit.first_threshold:
+                    self.fruit.available = True
+                elif self.pacdots.remaining == self.fruit.second_threshold:
+                    self.fruit.available = True
 
         # Update fruit
-        if self.fruit.available:
-            if self.pacman.collided_with(self.fruit):
-                self.pacman.score += 100
-                self.fruit.available = False
-            elif self.fruit.available_countdown == 0:
-                self.fruit.available = False
-            self.fruit.available_countdown -= 1
+        if self.include_fruit:
+            if self.fruit.available:
+                if self.pacman.collided_with(self.fruit):
+                    self.pacman.score += 100
+                    self.fruit.available = False
+                elif self.fruit.available_countdown == 0:
+                    self.fruit.available = False
+                self.fruit.available_countdown -= 1
 
     def update_screen(self) -> None:
         """Draw the current frame to the screen."""
@@ -178,22 +193,25 @@ class Playback:
         self.bg.draw(self.screen)
 
         # Draw dots first so characters drawn oven them
-        for dot in self.pacdots.dots:
-            dot_position = to_pixels(dot, self.tile_size)
-            pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.2)
+        if self.include_pacdots:
+            for dot in self.pacdots.dots:
+                dot_position = to_pixels(dot, self.tile_size)
+                pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.2)
 
-        for dot in self.pacdots.power_dots:
-            dot_position = to_pixels(dot, self.tile_size)
-            pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.35)
+        if self.include_powerdots:
+            for dot in self.pacdots.power_dots:
+                dot_position = to_pixels(dot, self.tile_size)
+                pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.35)
 
         # Draw fruit
-        if self.fruit.available:
+        if self.include_fruit and self.fruit.available:
             self.fruit.draw(self.screen)
 
         # Ghosts next
-        for ghost in self.ghosts:
-            if not ghost.inactive:
-                ghost.draw(self.screen, self.tile_size)
+        if self.include_ghosts:
+            for ghost in self.ghosts:
+                if not ghost.inactive:
+                    ghost.draw(self.screen, self.tile_size)
 
         # Finally pacman
         self.pacman.draw(self.screen, self.tile_size)
@@ -237,7 +255,9 @@ class Playback:
 def playback() -> None:
 
     handled_settings = settings_handler(settings, silent=True)
-    playback_folder = handled_settings['playback_settings']['save_folder']
+
+    phase = Phase[settings['phase'].upper()]
+    playback_folder = handled_settings['playback_settings']['save_folder'] + f'/{phase.name.lower()}'
     player_args = handled_settings['player_args']
-    pb = Playback(playback_folder, PlaybackPlayer, player_args)
+    pb = Playback(playback_folder, PlaybackPlayer, player_args, phase)
     pb.run()

@@ -18,7 +18,7 @@ genome_settings = {
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
-    'hidden_activation': None,  # Options are ['sigmoid', 'relu', 'linear'], Default = 'sigmoid'
+    'hidden_activation': 'relu',  # Options are ['sigmoid', 'relu', 'linear'], Default = 'sigmoid'
 
 }
 
@@ -26,9 +26,9 @@ genome_settings = {
 population_settings = {
 
     # The number of Players per generation
-    'size': 100,
+    'size': 150,
     # The percentage of Players to remove from each Species before creating offspring each generation
-    'cull_percentage': None,    # Default = 0.5
+    'cull_percentage': 0.8,    # Default = 0.5
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
     # Folder to save each generation to (overwritten each time) so the program can be paused and resumed
@@ -40,9 +40,9 @@ population_settings = {
 species_settings = {
 
     # Values used for determining whether two Genomes are part of the same Species
-    'excess_coefficient': None, # Default = 1
-    'disjoint_coefficient': None, # Default = 1
-    'weight_difference_coefficient': None,  # Default = 0.4
+    'excess_coefficient': 2, # Default = 1
+    'disjoint_coefficient': 2, # Default = 1
+    'weight_difference_coefficient': 0.5,  # Default = 0.4
     'compatibility_threshold': 1,    # Default = 3
 
     # The number of generations a Species can go without improvement before being removed
@@ -62,9 +62,9 @@ reproduction_settings = {
     # The rate at which a Genome that is having its weights mutated will replace a weight over perturbing it
     'weight_replacement_rate': None,    # Default = 0.1
     # The rate at which a new Connection will be added to a Genome
-    'connection_rate': None,    # Default = 0.1
+    'connection_rate': 0.95,    # Default = 0.1
     # The rate at which a new Node will be added to a Genome
-    'node_rate': None,  # Default = 0.03
+    'node_rate': 0.25,  # Default = 0.03
 
 }
 
@@ -102,13 +102,18 @@ settings = {
 
     # Choose whether to start a Population of Players with randomized Genomes or load a previous save
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
-    'creation_type': 'new', # Options are ['new', 'load']
+    'creation_type': 'load', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     # Only the player_args, progress_settings and playback_settings will be replaced
     'load_all_settings': False,
     # The number of generations to run the Population until
     # A loaded Population will remember the generation it was saved at and still only run till this number
     'total_generations': 200,
+
+    # Choose which phase to train
+    'phase': 'dots_and_ghosts',   # Options are ['only_dots', 'dots_and_ghosts', 'full_game']
+    # Define whether starting a new phase so that loading is handled correctly
+    'is_new_phase': True,   # Should be False if first phase
 
     'player_args': player_args,
     'genome_settings': genome_settings,
@@ -123,7 +128,7 @@ settings = {
 
 simulation_settings = {
 
-    'max_stationary_count': 20,
+    'max_stationary_count': 500,
     'max_famine_count': 1500,
 
 }
