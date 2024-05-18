@@ -32,8 +32,28 @@ class Playback:
         phase: Phase,
     ) -> None:
         
-        # Store our current phase
-        self.include_pacdots, self.include_fruit, self.include_ghosts, self.include_powerdots = phase.inclusions
+        # Set our current Phase
+        match(phase):
+
+            case Phase.ONLY_DOTS:
+                self.new_episode = self.only_dots_new_episode
+                self.advance = self.only_dots_advance
+                self.update_screen = self.only_dots_update_screen
+
+            case Phase.DOTS_AND_BLINKY:
+                self.new_episode = self.dots_and_blinky_new_episode
+                self.advance = self.dots_and_blinky_advance
+                self.update_screen = self.dots_and_ghosts_update_screen
+
+            case Phase.DOTS_AND_GHOSTS:
+                self.new_episode = self.dots_and_ghosts_new_episode
+                self.advance = self.dots_and_ghosts_advance
+                self.update_screen = self.dots_and_ghosts_update_screen
+
+            case Phase.FULL_GAME:
+                self.new_episode = self.full_game_new_episode
+                self.advance = self.full_game_advance
+                self.update_screen = self.full_game_update_screen
 
         # Pygame set up
         width = 532
@@ -61,7 +81,6 @@ class Playback:
         self.players = PlaybackPlayers(playback_folder, playback_player, player_args)
         if len(list(self.players)) > 1:
             raise Exception('One should not attempt to view playback of more than one PacMan at a time')
-        self.pacman.initialise()
 
         # Ghosts set up
         blinky = BlinkySprite(self.pacman, spritesheet)
@@ -70,35 +89,56 @@ class Playback:
         clyde = ClydeSprite(self.pacman, spritesheet)
         self.ghosts = Ghosts(self.pacman, blinky, pinky, inky, clyde)
         self.ghosts.initialise()
-        if not self.include_ghosts:
-            self.ghosts.blinky.inactive = True
 
-        # Dot set up        
+        # PacDot set up
         self.pacdots = PacDots()
 
         # Fruit set up
         self.fruit = FruitSprite(spritesheet)
+
+        self.new_episode()
 
     @property
     def pacman(self) -> PacMan:
         """Return the first (and will be only) member of self.players."""
         return self.players[0]
     
-    def new_episode(self) -> None:
-        """Return all game objects to starting state."""
+    def initialise_ghosts(self) -> None:
+        """Initialise the Ghosts and ensure that they are referencing current self.pacman."""
+
+        for ghost in self.ghosts:
+            ghost.pacman = self.pacman
+        self.ghosts.pacman = self.pacman
+        self.ghosts.initialise()
+
+    def only_dots_new_episode(self) -> None:
+        """Start a new episode for Phase.ONLY_DOTS."""
 
         self.pacman.initialise()
+        self.pacdots = PacDots()
 
-        if self.include_ghosts:
-            for ghost in self.ghosts:
-                ghost.pacman = self.pacman
-            self.ghosts.pacman = self.pacman
-            self.ghosts.initialise()
-            
-        if self.include_pacdots or self.include_powerdots:
-            self.pacdots = PacDots()
-        if self.include_fruit:
-            self.fruit.available = False
+    def dots_and_blinky_new_episode(self) -> None:
+        """Start a new episode for Phase.DOTS_AND_BLINKY."""
+
+        self.pacman.initialise()
+        self.initialise_ghosts()
+        self.ghosts.pinky.inactive_count = 51
+        self.pacdots = PacDots()
+
+    def dots_and_ghosts_new_episode(self) -> None:
+        """Start a new episode for Phase.DOTS_AND_GHOSTS."""
+
+        self.pacman.initialise()
+        self.initialise_ghosts()
+        self.pacdots = PacDots()
+
+    def full_game_new_episode(self) -> None:
+        """Start a new episode for Phase.FULL_GAME."""
+
+        self.pacman.initialise()
+        self.initialise_ghosts()
+        self.pacdots = PacDots()
+        self.fruit.available = False
 
     def check_key_press(self) -> Direction:
         """Check for new key presses."""
@@ -129,96 +169,155 @@ class Playback:
                     self.speed_multiplier = max(1, self.speed_multiplier // 2)
                 elif event.key == pygame.K_k:
                     self.speed_multiplier *= 2
-    
-    def advance(self) -> None:
-        """Advance to the next frame."""
 
-        # Move PacMan
+    def advance_pacman(self) -> None:
+        """Advance PacMan one frame."""
+
         self.pacman.look(self.pacdots, self.fruit, self.ghosts)
         move = self.pacman.think()
         self.pacman.move(move)
 
-        # Move ghosts and check collisions
-        if self.include_ghosts:
-            self.ghosts.move()
-            self.ghosts.check_collision()
+    def advance_ghosts(self) -> None:
+        """Advance the Ghosts one frame."""
 
-        # Update pacdots
-        dots_changed = False
-        if self.include_pacdots:
-            if self.pacdots.check_if_eaten(self.pacman):
-                self.pacman.score += 10
-                self.pacman.move_next = False
-                dots_changed = True
-        if self.include_powerdots:
-            if self.pacdots.check_if_powered(self.pacman):
-                self.pacman.score += 50
-                self.pacman.move_next = False
-                self.ghosts.frightened = True
-                dots_changed = True
+        self.ghosts.move()
+        self.ghosts.check_collision()
 
-        # Check for dot checkpoints
-        if self.include_pacdots and dots_changed:
+    def check_dots(self) -> bool:
+        """Return True if PacMan has just eaten a PacDot.
+        
+        Automatically updates PacMan's attributes.
+        """
 
-            if self.include_ghosts:
-                if self.pacdots.remaining == 214:
-                    self.ghosts.inky.inactive = False
-                elif self.pacdots.remaining == 184:
-                    self.ghosts.clyde.inactive = False
-                elif self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
-                    self.ghosts.blinky.elroy = 1
-                elif self.pacdots.remaining == self.ghosts.blinky.elroy_second_threshold:
-                    self.ghosts.blinky.elroy = 2
+        if self.pacdots.check_if_eaten(self.pacman):
+            self.pacman.score += 10
+            self.pacman.move_next = False
+            return True
+        
+        return False
+        
+    def check_power_dots(self) -> bool:
+        """Return True if PacMan has just eaten a PowerDot.
+        
+        Automatically updates PacMan's attributes and sets the Ghosts to frightened.
+        """
 
-            if self.include_fruit:
-                if self.pacdots.remaining == self.fruit.first_threshold:
-                    self.fruit.available = True
-                elif self.pacdots.remaining == self.fruit.second_threshold:
-                    self.fruit.available = True
+        if self.pacdots.check_if_powered(self.pacman):
+            self.pacman.score += 50
+            self.pacman.move_next = False
+            self.ghosts.frightened = True
+            return True
+        
+        return False
+    
+    def check_fruit(self) -> None:
+        """Check if PacMan has just eaten the Fruit.
+        
+        Automatically updates PacMan's attributes.
+        """
 
-        # Update fruit
-        if self.include_fruit:
-            if self.fruit.available:
-                if self.pacman.collided_with(self.fruit):
-                    self.pacman.score += 100
-                    self.fruit.available = False
-                elif self.fruit.available_countdown == 0:
-                    self.fruit.available = False
-                self.fruit.available_countdown -= 1
+        if not self.fruit.available:
+            return
+        
+        if self.pacman.collided_with(self.fruit):
+            self.pacman.score += 100
+            self.fruit.available = False
+        elif self.fruit.available_countdown == 0:
+            self.fruit.available = False
 
-    def update_screen(self) -> None:
-        """Draw the current frame to the screen."""
+        self.fruit.available_countdown -= 1
+    
+    def dot_ghost_threshold(self) -> None:
+        """Check if enough PacDots have been eaten to release/update a Ghost."""
 
-        # Wipe the last frame
-        self.bg.draw(self.screen)
+        if self.pacdots.remaining == 214:
+            self.ghosts.inky.inactive = False
+        elif self.pacdots.remaining == 184:
+            self.ghosts.clyde.inactive = False
+        elif self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
+            self.ghosts.blinky.elroy = 1
+        elif self.pacdots.remaining == self.ghosts.blinky.elroy_second_threshold:
+            self.ghosts.blinky.elroy = 2
 
-        # Draw dots first so characters drawn oven them
-        if self.include_pacdots:
-            for dot in self.pacdots.dots:
-                dot_position = to_pixels(dot, self.tile_size)
-                pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.2)
+    def dot_fruit_threshold(self) -> None:
+        """Check if enough PacDots have been eaten to make the Fruit available."""
 
-        if self.include_powerdots:
-            for dot in self.pacdots.power_dots:
-                dot_position = to_pixels(dot, self.tile_size)
-                pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.35)
+        if self.pacdots.remaining == self.fruit.first_threshold:
+            self.fruit.available = True
+        elif self.pacdots.remaining == self.fruit.second_threshold:
+            self.fruit.available = True
 
-        # Draw fruit
-        if self.include_fruit and self.fruit.available:
-            self.fruit.draw(self.screen)
+    def only_dots_advance(self) -> None:
+        """Advance to the next frame in Phase.ONLY_DOTS."""
 
-        # Ghosts next
-        if self.include_ghosts:
-            for ghost in self.ghosts:
-                if not ghost.inactive:
-                    ghost.draw(self.screen, self.tile_size)
+        self.advance_pacman()
+        self.check_dots()
 
-        # Finally pacman
+    def dots_and_ghosts_advance(self) -> None:
+        """Advance to the next frame in Phase.DOTS_AND_GHOSTS."""
+
+        self.advance_pacman()
+        self.advance_ghosts()
+        self.check_dots()
+        self.dot_ghost_threshold()
+
+    def dots_and_blinky_advance(self) -> None:
+        """Advance to the next frame in Phase.DOTS_AND_BLINKY."""
+
+        self.advance_pacman()
+        self.advance_ghosts()
+        self.check_dots()
+
+    def full_game_advance(self) -> None:
+        """Advance to the next frame in Phase.FULL_GAME."""
+
+        self.advance_pacman()
+        self.advance_ghosts()
+        self.check_dots()
+        self.check_power_dots()
+        self.check_fruit()
+        self.dot_ghost_threshold()
+        self.dot_fruit_threshold()
+
+    def draw_dots(self) -> None:
+        """Draw the PacDots."""
+
+        for dot in self.pacdots.dots:
+            dot_position = to_pixels(dot, self.tile_size)
+            pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.2)
+
+    def draw_power_dots(self) -> None:
+        """Draw the PowerDots."""
+
+        for dot in self.pacdots.power_dots:
+            dot_position = to_pixels(dot, self.tile_size)
+            pygame.draw.circle(self.screen, 'pink', dot_position, self.tile_size*0.35)
+
+    def draw_fruit(self) -> None:
+        """Draw the Fruit."""
+
+        self.fruit.draw(self.screen)
+
+    def draw_ghosts(self) -> None:
+        """Draw the Ghosts."""
+
+        for ghost in self.ghosts:
+            if not ghost.inactive:
+                ghost.draw(self.screen, self.tile_size)
+
+    def draw_pacman(self) -> None:
+        """Draw PacMan."""
+
         self.pacman.draw(self.screen, self.tile_size)
 
-        # Write up-to-date score
+    def draw_score(self) -> None:
+        """Draw the score."""
+
         self.letters.draw_score(self.screen)
         self.numbers.draw_score(self.screen, self.pacman.score)
+
+    def write_stats(self) -> None:
+        """Write the playback stats."""
 
         # Show the gen
         gen = self.stats_font.render(f'Gen: {self.players.generation}', True, 'white')
@@ -235,7 +334,38 @@ class Playback:
         speed_rect = speed.get_rect(topright=(29 * self.tile_size, 0.5 * self.tile_size))
         self.screen.blit(speed, speed_rect)
 
-        # Update the screen
+    def only_dots_update_screen(self) -> None:
+        """Draw the current frame to the screen in Phase.ONLY_DOTS."""
+
+        self.bg.draw(self.screen)
+        self.draw_dots()
+        self.draw_pacman()
+        self.draw_score()
+        self.write_stats()
+        pygame.display.flip()
+
+    def dots_and_ghosts_update_screen(self) -> None:
+        """Draw the current frame to the screen in Phase.DOTS_AND_GHOSTS."""
+
+        self.bg.draw(self.screen)
+        self.draw_dots()
+        self.draw_ghosts()
+        self.draw_pacman()
+        self.draw_score()
+        self.write_stats()
+        pygame.display.flip()
+
+    def full_game_update_screen(self) -> None:
+        """Draw the current frame to the screen in Phase.FULL_GAME."""
+
+        self.bg.draw(self.screen)
+        self.draw_dots()
+        self.draw_power_dots()
+        self.draw_fruit()
+        self.draw_ghosts()
+        self.draw_pacman()
+        self.draw_score()
+        self.write_stats()
         pygame.display.flip()
 
     def run(self) -> None:

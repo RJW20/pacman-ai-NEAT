@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 from pacman_ai_neat.phase import Phase
