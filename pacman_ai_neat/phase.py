@@ -1,7 +1,7 @@
 from enum import Enum, auto
 from typing import Callable
 
-from pacman_ai_neat.simulator import only_dots, dots_and_ghosts, full_game
+from pacman_ai_neat.simulator import only_dots, dots_and_blinky, dots_and_ghosts, full_game
 from pacman_ai_neat.player import Player
 
 
@@ -14,6 +14,7 @@ class Phase(Enum):
     """
 
     ONLY_DOTS = only_dots
+    DOTS_AND_BLINKY = dots_and_blinky
     DOTS_AND_GHOSTS = dots_and_ghosts
     FULL_GAME = full_game
 

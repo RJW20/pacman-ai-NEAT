@@ -40,6 +40,11 @@ class Playback:
                 self.advance = self.only_dots_advance
                 self.update_screen = self.only_dots_update_screen
 
+            case Phase.DOTS_AND_BLINKY:
+                self.new_episode = self.dots_and_blinky_new_episode
+                self.advance = self.dots_and_blinky_advance
+                self.update_screen = self.dots_and_ghosts_update_screen
+
             case Phase.DOTS_AND_GHOSTS:
                 self.new_episode = self.dots_and_ghosts_new_episode
                 self.advance = self.dots_and_ghosts_advance
@@ -106,6 +111,14 @@ class Playback:
         """Start a new episode for Phase.ONLY_DOTS."""
 
         self.pacman.initialise()
+        self.pacdots = PacDots()
+
+    def dots_and_blinky_new_episode(self) -> None:
+        """Start a new episode for Phase.DOTS_AND_BLINKY."""
+
+        self.pacman.initialise()
+        self.initialise_ghosts()
+        self.ghosts.pinky.inactive_count = 51
         self.pacdots = PacDots()
 
     def dots_and_ghosts_new_episode(self) -> None:
@@ -243,6 +256,13 @@ class Playback:
         self.advance_ghosts()
         self.check_dots()
         self.dot_ghost_threshold()
+
+    def dots_and_blinky_advance(self) -> None:
+        """Advance to the next frame in Phase.DOTS_AND_BLINKY."""
+
+        self.advance_pacman()
+        self.advance_ghosts()
+        self.check_dots()
 
     def full_game_advance(self) -> None:
         """Advance to the next frame in Phase.FULL_GAME."""
