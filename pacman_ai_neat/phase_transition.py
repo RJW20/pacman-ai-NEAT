@@ -21,5 +21,8 @@ def phase_transition(new_phase: Phase, settings: dict) -> None:
     population.staleness = 0
     population.best_fitness = 0
 
+    # Remove the Species
+    population.species = []
+
     # Overwrite the old save
     population.save()
