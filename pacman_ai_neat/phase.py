@@ -13,22 +13,17 @@ class Phase(Enum):
     The simulator functions corresponds to the correct simlator function for the phase.
     """
 
-    ONLY_DOTS = [True, False, False, False], only_dots
-    DOTS_AND_GHOSTS = [True, False, True, False], dots_and_ghosts
-    FULL_GAME = [True, False, True, True], full_game
+    ONLY_DOTS = only_dots
+    DOTS_AND_GHOSTS = dots_and_ghosts
+    FULL_GAME = full_game
 
     def __new__(cls, *args, **kwargs) -> object:
         obj = object.__new__(cls)
         obj._value_ = auto()
         return obj
     
-    def __init__(self, inclusions: list[bool], simulator_function: Callable[[Player], Player]) -> None:
-        self._inclusions_ = inclusions
+    def __init__(self, simulator_function: Callable[[Player], Player]) -> None:
         self._simulator_function_ = simulator_function
-
-    @property
-    def inclusions(self) -> list[bool]:
-        return self._inclusions_
 
     @property
     def simulator_function(self) -> Callable[[Player], Player]:
