@@ -88,6 +88,10 @@ class Playback:
         inky = InkySprite(self.pacman, spritesheet)
         clyde = ClydeSprite(self.pacman, spritesheet)
         self.ghosts = Ghosts(self.pacman, blinky, pinky, inky, clyde)
+        self.ghosts.initialise()
+
+        # PacDot set up
+        self.pacdots = PacDots()
 
         # Fruit set up
         self.fruit = FruitSprite(spritesheet)

@@ -28,7 +28,7 @@ population_settings = {
     # The number of Players per generation
     'size': 500,
     # The percentage of Players to remove from each Species before creating offspring each generation
-    'cull_percentage': None,    # Default = 0.5
+    'cull_percentage': 0.7,    # Default = 0.5
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
     # Folder to save each generation to (overwritten each time) so the program can be paused and resumed
@@ -62,9 +62,9 @@ reproduction_settings = {
     # The rate at which a Genome that is having its weights mutated will replace a weight over perturbing it
     'weight_replacement_rate': None,    # Default = 0.1
     # The rate at which a new Connection will be added to a Genome
-    'connection_rate': None,    # Default = 0.1
+    'connection_rate': 0.5,    # Default = 0.1
     # The rate at which a new Node will be added to a Genome
-    'node_rate': None,  # Default = 0.03
+    'node_rate': 0.1,  # Default = 0.03
 
 }
 
@@ -111,7 +111,7 @@ settings = {
     'total_generations': 200,
 
     # Choose which phase to train
-    'phase': 'full_game',   # Options are ['only_dots', 'dots_and_ghosts', 'full_game']
+    'phase': 'dots_and_ghosts',   # Options are ['only_dots', 'dots_and_blinky', 'dots_and_ghosts', 'full_game']
     # Define whether starting a new phase so that loading is handled correctly
     'is_new_phase': True,   # Should be False if first phase
 
@@ -129,6 +129,6 @@ settings = {
 simulation_settings = {
 
     'max_stationary_count': 20,
-    'max_famine_count': 1500,
+    'max_famine_count': 2000,
 
 }

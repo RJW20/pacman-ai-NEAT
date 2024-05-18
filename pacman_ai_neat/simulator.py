@@ -66,7 +66,7 @@ def only_dots(pacman: Player) -> Player:
     return pacman
 
 
-def blinky(pacman: Player) -> Player:
+def dots_and_blinky(pacman: Player) -> Player:
     """Run PacMan in the game with PacDots and just Blinky.
     
     Runs until PacMan dies, goes too long without eating a dot or stays still for too long.
