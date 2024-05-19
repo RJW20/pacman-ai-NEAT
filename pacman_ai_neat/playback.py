@@ -45,6 +45,11 @@ class Playback:
                 self.advance = self.dots_and_blinky_advance
                 self.update_screen = self.dots_and_ghosts_update_screen
 
+            case Phase.DOTS_AND_TWO_GHOSTS:
+                self.new_episode = self.dots_and_ghosts_new_episode
+                self.advance = self.dots_and_blinky_advance
+                self.update_screen = self.dots_and_ghosts_update_screen
+
             case Phase.DOTS_AND_GHOSTS:
                 self.new_episode = self.dots_and_ghosts_new_episode
                 self.advance = self.dots_and_ghosts_advance
@@ -116,6 +121,7 @@ class Playback:
 
         self.pacman.initialise()
         self.pacdots = PacDots()
+        self.ghosts.blinky.inactive = True
 
     def dots_and_blinky_new_episode(self) -> None:
         """Start a new episode for Phase.DOTS_AND_BLINKY."""
@@ -303,7 +309,8 @@ class Playback:
     def draw_fruit(self) -> None:
         """Draw the Fruit."""
 
-        self.fruit.draw(self.screen)
+        if self.fruit.available:
+            self.fruit.draw(self.screen)
 
     def draw_ghosts(self) -> None:
         """Draw the Ghosts."""
