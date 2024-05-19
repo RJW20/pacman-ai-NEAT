@@ -43,7 +43,7 @@ species_settings = {
     'excess_coefficient': 2, # Default = 1
     'disjoint_coefficient': 2, # Default = 1
     'weight_difference_coefficient': 0.5,  # Default = 0.4
-    'compatibility_threshold': 1,    # Default = 3
+    'compatibility_threshold': 0.5,    # Default = 3
 
     # The number of generations a Species can go without improvement before being removed
     'max_staleness': None,  # Default = 15
@@ -102,7 +102,7 @@ settings = {
 
     # Choose whether to start a Population of Players with randomized Genomes or load a previous save
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
-    'creation_type': 'load', # Options are ['new', 'load']
+    'creation_type': 'new', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     # Only the player_args, progress_settings and playback_settings will be replaced
     'load_all_settings': False,
@@ -111,9 +111,9 @@ settings = {
     'total_generations': 200,
 
     # Choose which phase to train
-    'phase': 'dots_and_ghosts',   # Options are ['only_dots', 'dots_and_ghosts', 'full_game']
+    'phase': 'only_dots',   # Options are ['only_dots', 'dots_and_blinky', 'dots_and_ghosts', 'full_game']
     # Define whether starting a new phase so that loading is handled correctly
-    'is_new_phase': True,   # Should be False if first phase
+    'is_new_phase': False,   # Should be False if first phase
 
     'player_args': player_args,
     'genome_settings': genome_settings,
@@ -129,6 +129,6 @@ settings = {
 simulation_settings = {
 
     'max_stationary_count': 500,
-    'max_famine_count': 1500,
+    'max_famine_count': 2000,
 
 }

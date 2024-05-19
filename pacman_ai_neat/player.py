@@ -32,33 +32,33 @@ class Player(PacMan, BasePlayer):
         """Return the value of the given tile.
         
         Tile values are:
-        - frightened Ghost = 0.2
-        - Fruit = 0.3
+        - path = 0
+        - frightened Ghost = 0.1
+        - Fruit = 0.2
         - PacDot/PowerDots = 0.4
-        - path = 0.5
-        - active Ghost = 0.8
-        - walls = 1
+        - walls = 0.75
+        - active Ghost = 1
         """
 
         if not self.in_bounds(tile):
-            return 1
+            return 0.75
         
         if tile in pacdot_pos:
             return 0.4
         
         if fruit_pos and tile in fruit_pos:
-            return 0.3
-        
-        if tile in active_ghost_pos:
-            return 0.8
-        
-        if tile in frightened_ghost_pos:
             return 0.2
         
-        if MAP[tile] == Tile.WALL:
+        if tile in active_ghost_pos:
             return 1
+        
+        if tile in frightened_ghost_pos:
+            return 0.1
+        
+        if MAP[tile] == Tile.WALL:
+            return 0.75
         else:
-            return 0.5
+            return 0
 
 
     def look(self, pacdots: PacDots, fruit: Fruit, ghosts: Ghosts) -> None:
@@ -66,12 +66,12 @@ class Player(PacMan, BasePlayer):
         
         Can see an 11x11 grid centered on PacMan. Tile values are:
         Tile values are:
-        - frightened Ghost = 0.2
-        - Fruit = 0.3
+        - path = 0
+        - frightened Ghost = 0.1
+        - Fruit = 0.2
         - PacDot/PowerDots = 0.4
-        - path = 0.5
-        - active Ghost = 0.8
-        - walls = 1
+        - walls = 0.75
+        - active Ghost = 1
         """
 
         # Prepare the things we're looking at
