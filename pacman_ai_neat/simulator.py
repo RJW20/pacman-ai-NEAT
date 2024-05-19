@@ -62,7 +62,7 @@ def only_dots(pacman: Player) -> Player:
     elif stationary_count == MAX_STATIONARY_COUNT:
         lifespan -= MAX_STATIONARY_COUNT
 
-    pacman.fitness = (pacman.score // 10) ** 4 / lifespan if lifespan else 0
+    pacman.fitness = (pacman.score // 10) ** 4 / (lifespan + 1000)
     return pacman
 
 

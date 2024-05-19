@@ -227,14 +227,18 @@ class Playback:
 
         self.fruit.available_countdown -= 1
     
-    def dot_ghost_threshold(self) -> None:
-        """Check if enough PacDots have been eaten to release/update a Ghost."""
+    def dot_ghost_release_threshold(self) -> None:
+        """Check if enough PacDots have been eaten to release a Ghost."""
 
         if self.pacdots.remaining == 214:
             self.ghosts.inky.inactive = False
         elif self.pacdots.remaining == 184:
             self.ghosts.clyde.inactive = False
-        elif self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
+
+    def dot_elroy_threshold(self) -> None:
+        """Check if enough PacDots have been eaten to set Blinky's elroy mode."""
+
+        if self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
             self.ghosts.blinky.elroy = 1
         elif self.pacdots.remaining == self.ghosts.blinky.elroy_second_threshold:
             self.ghosts.blinky.elroy = 2
@@ -253,20 +257,22 @@ class Playback:
         self.advance_pacman()
         self.check_dots()
 
-    def dots_and_ghosts_advance(self) -> None:
-        """Advance to the next frame in Phase.DOTS_AND_GHOSTS."""
-
-        self.advance_pacman()
-        self.advance_ghosts()
-        self.check_dots()
-        self.dot_ghost_threshold()
-
     def dots_and_blinky_advance(self) -> None:
         """Advance to the next frame in Phase.DOTS_AND_BLINKY."""
 
         self.advance_pacman()
         self.advance_ghosts()
         self.check_dots()
+        self.dot_elroy_threshold()
+
+    def dots_and_ghosts_advance(self) -> None:
+        """Advance to the next frame in Phase.DOTS_AND_GHOSTS."""
+
+        self.advance_pacman()
+        self.advance_ghosts()
+        self.check_dots()
+        self.dot_ghost_release_threshold()
+        self.dot_elroy_threshold()
 
     def full_game_advance(self) -> None:
         """Advance to the next frame in Phase.FULL_GAME."""
@@ -276,7 +282,8 @@ class Playback:
         self.check_dots()
         self.check_power_dots()
         self.check_fruit()
-        self.dot_ghost_threshold()
+        self.dot_ghost_release_threshold()
+        self.dot_elroy_threshold()
         self.dot_fruit_threshold()
 
     def draw_dots(self) -> None:
