@@ -111,9 +111,9 @@ settings = {
     'total_generations': 200,
 
     # Choose which phase to train
-    'phase': 'dots_and_blinky',   # Options are ['only_dots', 'dots_and_blinky', 'dots_and_ghosts', 'full_game']
+    'phase': 'full_game',   # Options are ['only_dots', 'dots_and_blinky', 'dots_and_ghosts', 'full_game']
     # Define whether starting a new phase so that loading is handled correctly
-    'is_new_phase': False,   # Should be False if first phase
+    'is_new_phase': True,   # Should be False if first phase
 
     'player_args': player_args,
     'genome_settings': genome_settings,

@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Callable
 
-from pacman_ai_neat.simulator import only_dots, dots_and_blinky, dots_and_ghosts, full_game
+from pacman_ai_neat.simulator import only_dots, dots_and_blinky, dots_and_two_ghosts, dots_and_ghosts, full_game
 from pacman_ai_neat.player import Player
 
 
@@ -13,8 +13,9 @@ class Phase(Enum):
 
     ONLY_DOTS = 1, only_dots
     DOTS_AND_BLINKY = 2, dots_and_blinky
-    DOTS_AND_GHOSTS = 3, dots_and_ghosts
-    FULL_GAME = 4, full_game
+    DOTS_AND_TWO_GHOSTS = 3, dots_and_two_ghosts
+    DOTS_AND_GHOSTS = 4, dots_and_ghosts
+    FULL_GAME = 5, full_game
 
     def __new__(cls, *args, **kwargs) -> object:
         obj = object.__new__(cls)
