@@ -121,6 +121,7 @@ class Playback:
 
         self.pacman.initialise()
         self.pacdots = PacDots()
+        self.ghosts.blinky.inactive = True
 
     def dots_and_blinky_new_episode(self) -> None:
         """Start a new episode for Phase.DOTS_AND_BLINKY."""

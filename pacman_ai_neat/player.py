@@ -96,8 +96,6 @@ class Player(PacMan, BasePlayer):
 
         # Prepare the things we're looking at
         pacdot_pos = pacdots.dots | pacdots.power_dots
-        if len(pacdot_pos) == 0:
-            print('Finished!', flush=True)
         fruit_pos = fruit.position.tile_pos if fruit.available else None
         active_ghost_pos = set(ghost.position.tile_pos for ghost in ghosts if not ghost.inactive and not ghost.mode == Mode.RETURN_TO_HOME)
         frightened_ghost_pos = set(ghost.position.tile_pos for ghost in ghosts if ghost.frightened)
