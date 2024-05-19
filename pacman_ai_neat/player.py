@@ -35,8 +35,8 @@ class Player(PacMan, BasePlayer):
         - whether it can move in the direction (4 one-hot values)
         - whether there is a PacDot (4 one-hot values)
         - whether the fruit is in the direction if available (4 one-hot values) *not yet
-        - whether there is an active ghost (4 one-hot values)
-        - whether there is a frightened ghost (4 one-hot values)
+        - whether there is an active ghost (4 one-hot values) *not yet
+        - whether there is a frightened ghost (4 one-hot values) *not yet
         """
 
         self.vision = []
@@ -50,9 +50,9 @@ class Player(PacMan, BasePlayer):
         pacdot_vision = []
         #fruit_vision = []
         a_ghost_vision = []
-        f_ghost_vision = []
+        #f_ghost_vision = []
         a_ghost_positions = set(ghost.position.tile_pos for ghost in ghosts if not ghost.inactive and not ghost.mode == Mode.RETURN_TO_HOME)
-        f_ghost_positions = set(ghost.position.tile_pos for ghost in ghosts if ghost.frightened)
+        #f_ghost_positions = set(ghost.position.tile_pos for ghost in ghosts if ghost.frightened)
         for direction in directions:
 
             dot_found = False
@@ -75,11 +75,11 @@ class Player(PacMan, BasePlayer):
                     if next_tile in a_ghost_positions:
                         ghost_found = True
                         a_ghost_vision.append(1)
-                        f_ghost_vision.append(0)
-                    elif next_tile in f_ghost_positions:
-                        ghost_found = True
-                        a_ghost_vision.append(0)
-                        f_ghost_vision.append(1)
+                #        f_ghost_vision.append(0)
+                #    elif next_tile in f_ghost_positions:
+                #        ghost_found = True
+                #        a_ghost_vision.append(0)
+                #        f_ghost_vision.append(1)
 
                 next_tile = next_tile[0] + direction.value.d_x, next_tile[1] + direction.value.d_y
 
@@ -87,10 +87,10 @@ class Player(PacMan, BasePlayer):
             #fruit_vision.append(int(fruit_found))
             if not ghost_found:
                 a_ghost_vision.append(0)
-                f_ghost_vision.append(0)
+            #    f_ghost_vision.append(0)
 
         #self.vision.extend(pacdot_vision + fruit_vision + a_ghost_vision + f_ghost_vision)
-        self.vision.extend(pacdot_vision + a_ghost_vision + f_ghost_vision)
+        self.vision.extend(pacdot_vision + a_ghost_vision)
 
     def think(self) -> Direction:
         """Feed the input into the Genome and return the output as a valid move."""

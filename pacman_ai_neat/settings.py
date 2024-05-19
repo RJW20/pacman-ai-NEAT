@@ -14,7 +14,7 @@ player_args = {}
 genome_settings = {
 
     # The number of inputs for the Neural Network
-    'input_count': 16,
+    'input_count': 12,
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
