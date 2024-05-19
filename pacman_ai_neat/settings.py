@@ -14,7 +14,7 @@ player_args = {}
 genome_settings = {
 
     # The number of inputs for the Neural Network
-    'input_count': 12,
+    'input_count': 4,
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
@@ -43,7 +43,7 @@ species_settings = {
     'excess_coefficient': None, # Default = 1
     'disjoint_coefficient': None, # Default = 1
     'weight_difference_coefficient': None,  # Default = 0.4
-    'compatibility_threshold': 1,    # Default = 3
+    'compatibility_threshold': 2,    # Default = 3
 
     # The number of generations a Species can go without improvement before being removed
     'max_staleness': None,  # Default = 15
@@ -62,9 +62,9 @@ reproduction_settings = {
     # The rate at which a Genome that is having its weights mutated will replace a weight over perturbing it
     'weight_replacement_rate': None,    # Default = 0.1
     # The rate at which a new Connection will be added to a Genome
-    'connection_rate': 0.5,    # Default = 0.1
+    'connection_rate': None,    # Default = 0.1
     # The rate at which a new Node will be added to a Genome
-    'node_rate': 0.1,  # Default = 0.03
+    'node_rate': None,  # Default = 0.03
 
 }
 
