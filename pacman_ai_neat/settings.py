@@ -14,7 +14,7 @@ player_args = {}
 genome_settings = {
 
     # The number of inputs for the Neural Network
-    'input_count': 4,
+    'input_count': 8,
     # The number of options the Player has
     'output_count': 4,
     # The activation to use for all Nodes in hidden layers i.e. all layers except input and output
@@ -102,7 +102,7 @@ settings = {
 
     # Choose whether to start a Population of Players with randomized Genomes or load a previous save
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
-    'creation_type': 'new', # Options are ['new', 'load']
+    'creation_type': 'load', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     # Only the player_args, progress_settings and playback_settings will be replaced
     'load_all_settings': False,
@@ -111,9 +111,9 @@ settings = {
     'total_generations': 200,
 
     # Choose which phase to train
-    'phase': 'only_dots',   # Options are ['only_dots', 'dots_and_blinky', 'dots_and_two_ghosts', 'dots_and_ghosts', 'full_game']
+    'phase': 'dots_and_two_ghosts',   # Options are ['only_dots', 'dots_and_blinky', 'dots_and_two_ghosts', 'dots_and_ghosts', 'full_game']
     # Define whether starting a new phase so that loading is handled correctly
-    'is_new_phase': False,   # Should be False if first phase
+    'is_new_phase': True,   # Should be False if first phase
 
     'player_args': player_args,
     'genome_settings': genome_settings,

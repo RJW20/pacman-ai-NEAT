@@ -79,6 +79,24 @@ class Player(PacMan, BasePlayer):
                 value = min(0.1, value)
 
         return value
+    
+    def look_in_ordinal(self, direction: Direction, active_ghost_pos: set[tuple[int,int]]) -> bool:
+        """Return True if there is an active ghost in the 3x3 square of tiles in the direction 45 degrees
+        clockwise from the given direction."""
+
+        # Get the 9 tiles
+        orthog_direction = Direction(Vector(-direction.value.d_y, direction.value.d_x))
+        tiles = set((
+            self.position.tile_x + i*(direction.value.d_x + orthog_direction.value.d_x),
+            self.position.tile_y + j*(direction.value.d_y + orthog_direction.value.d_y)
+        ) for i in range(1,4) for j in range(1,4))
+
+        # Check if there are any Ghosts in there
+        for ghost_pos in active_ghost_pos:
+            if ghost_pos in tiles:
+                return True
+            
+        return False
 
     def look(self, pacdots: PacDots, fruit: Fruit, ghosts: Ghosts) -> None:
         """Set PacMan's vision.
@@ -92,7 +110,8 @@ class Player(PacMan, BasePlayer):
         - whether there is a frightened ghost (value = 0)
         """
 
-        self.vision = []
+        cardinal_vision = []
+        ordinal_vision = []
 
         # Prepare the things we're looking at
         pacdot_pos = pacdots.dots | pacdots.power_dots
@@ -103,13 +122,16 @@ class Player(PacMan, BasePlayer):
         # Look in all the directions
         directions = self.perspective
         for direction in directions:
-            self.vision.append(self.look_in_direction(
+            cardinal_vision.append(self.look_in_direction(
                 direction=direction,
                 pacdot_pos=pacdot_pos,
                 fruit_pos=fruit_pos,
                 active_ghost_pos=active_ghost_pos,
                 frightened_ghost_pos=frightened_ghost_pos,
             ))
+            ordinal_vision.append(self.look_in_ordinal(direction, active_ghost_pos))
+
+        self.vision = cardinal_vision + ordinal_vision
 
     def think(self) -> Direction:
         """Feed the input into the Genome and return the output as a valid move."""
