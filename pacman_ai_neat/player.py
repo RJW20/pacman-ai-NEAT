@@ -129,7 +129,7 @@ class Player(PacMan, BasePlayer):
                 active_ghost_pos=active_ghost_pos,
                 frightened_ghost_pos=frightened_ghost_pos,
             ))
-            ordinal_vision.append(self.look_in_ordinal(direction, active_ghost_pos))
+            ordinal_vision.append(int(self.look_in_ordinal(direction, active_ghost_pos)))
 
         self.vision = cardinal_vision + ordinal_vision
 

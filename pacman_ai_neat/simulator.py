@@ -34,7 +34,7 @@ def only_dots(pacman: Player) -> Player:
     MAX_FAMINE_COUNT = simulation_settings['max_famine_count']
     MAX_STATIONARY_COUNT = simulation_settings['max_stationary_count']
     prev_tile = pacman.position.tile_pos
-    while famine_count < MAX_FAMINE_COUNT and stationary_count < MAX_STATIONARY_COUNT and pacman.score < 2400:
+    while famine_count < MAX_FAMINE_COUNT and stationary_count < MAX_STATIONARY_COUNT and pacman.score < 2000:
 
         pacman.look(pacdots, fruit, ghosts)
         move = pacman.think()
