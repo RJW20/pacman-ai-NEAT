@@ -40,23 +40,23 @@ class Player(PacMan, BasePlayer):
         """Look 5 tiles in the given direction and return a value corresponding to what is seen.
 
         If the first tile is wall returns 1.
-        If there is nothing (possibly before a wall) returns 0.5.
-        If there is a PacDot before any walls returns 0.2.
-        If there is the Fruit before any walls return 0.1 (looks like better PacDot).
+        If there is nothing (possibly before a wall) returns 0.
+        If there is a PacDot before any walls returns -0.5.
+        If there is the Fruit before any walls return -0.7 (looks like better PacDot).
         If there is an active Ghost before any walls returns 1 so it looks like a wall to PacMan.
-        If there is a frightened Ghost before any walls returns 0 (looks like even better PacDot).
+        If there is a frightened Ghost before any walls returns -1 (looks like even better PacDot).
         """
 
         if not self.can_move_in_direction(direction):
             return 1
 
         tiles = [(self.position.tile_x + i*direction.value.d_x, self.position.tile_y + i*direction.value.d_y) for i in range(1,6)]
-        value = 0.5
+        value = 0
         for tile in tiles:
 
             # If out of bounds then its only been path (only happens in tunnel)
             if not self.in_bounds(tile):
-                return 0.5
+                return 0
             
             # If its wall then we can make a decision
             if MAP[tile] == Tile.WALL:
@@ -68,15 +68,15 @@ class Player(PacMan, BasePlayer):
             
             # If its a frightend ghost update/overwrite the value
             if tile in frightened_ghost_pos:
-                value = 0
+                value = -1
 
             # If its a PacDot then update the value (but only if we haven't seen something better)
             if tile in pacdot_pos:
-                value = min(0.2, value)
+                value = min(-0.5, value)
 
             # If its a Fruit then update the value (but only if we haven't seen something better)
             if fruit_pos and tile == fruit_pos:
-                value = min(0.1, value)
+                value = min(-0.6, value)
 
         return value
     
@@ -102,12 +102,12 @@ class Player(PacMan, BasePlayer):
         """Set PacMan's vision.
         
         Can see the below for 5 squares in the 4 cardinal directions (in the order from self.perspective):
-        - whether it can move in the direction (value = 0.5)
+        - whether it can move in the direction (value = 0)
         - whether there is a wall in the direction (value = 1)
-        - whether there is a PacDot (value = 0.2)
-        - whether there is the Fruit (value = 0.1)
+        - whether there is a PacDot (value = -0.5)
+        - whether there is the Fruit (value = -0.7)
         - whether there is an active ghost (value = 1)
-        - whether there is a frightened ghost (value = 0)
+        - whether there is a frightened ghost (value = -1)
         """
 
         cardinal_vision = []
@@ -116,8 +116,8 @@ class Player(PacMan, BasePlayer):
         # Prepare the things we're looking at
         pacdot_pos = pacdots.dots | pacdots.power_dots
         fruit_pos = fruit.position.tile_pos if fruit.available else None
-        active_ghost_pos = set(ghost.position.tile_pos for ghost in ghosts if not ghost.inactive and not ghost.mode == Mode.RETURN_TO_HOME)
-        frightened_ghost_pos = set(ghost.position.tile_pos for ghost in ghosts if ghost.frightened)
+        active_ghost_pos = set(ghost.position.tile_pos for ghost in ghosts if not ghost.inactive and not ghost.mode == Mode.RETURN_TO_HOME and not ghost.frightened)
+        frightened_ghost_pos = set(ghost.position.tile_pos for ghost in ghosts if not ghost.inactive and ghost.frightened)
 
         # Look in all the directions
         directions = self.perspective
