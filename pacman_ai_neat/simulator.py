@@ -377,5 +377,5 @@ def full_game(pacman: Player) -> Player:
     elif stationary_count == MAX_STATIONARY_COUNT:
         lifespan -= MAX_STATIONARY_COUNT
 
-    pacman.fitness = pacman.score
+    pacman.fitness = (244 - len(pacdots.dots | pacdots.power_dots)) * 10     #Still just the number of dots eaten)
     return pacman
