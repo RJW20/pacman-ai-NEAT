@@ -5,7 +5,6 @@ from pacman_app import PacMan, PacDots, Ghosts
 from pacman_app.sprites import SpriteSheet, BlinkySprite, PinkySprite, InkySprite, ClydeSprite, FruitSprite
 from pacman_app.sprites.letters import Letters
 from pacman_app.sprites.numbers import Numbers
-from pacman_app.map import Direction
 from pacman_app.pixels import to_pixels
 
 from neat import PlaybackPlayers
@@ -146,7 +145,7 @@ class Playback:
         self.pacdots = PacDots()
         self.fruit.available = False
 
-    def check_key_press(self) -> Direction:
+    def check_key_press(self) -> None:
         """Check for new key presses."""
 
         for event in pygame.event.get():
