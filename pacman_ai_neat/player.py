@@ -108,6 +108,8 @@ class Player(PacMan, BasePlayer):
         - whether there is the Fruit (value = -0.7)
         - whether there is an active ghost (value = 1)
         - whether there is a frightened ghost (value = -1)
+        as well as 4 one-hot values indicating if there is an active ghost in the 3x3 square of tiles diagonally 
+        away from PacMan in the 4 ordinal directions.
         """
 
         cardinal_vision = []
