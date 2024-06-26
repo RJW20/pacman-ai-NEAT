@@ -1,17 +1,17 @@
 import pygame
 
+from pacman_app.game import Game
 from pacman_app.background import Background
 from pacman_app import PacDots, Ghosts
 from pacman_app.sprites import SpriteSheet, BlinkySprite, PinkySprite, InkySprite, ClydeSprite, FruitSprite
 from pacman_app.sprites.letters import Letters
 from pacman_app.sprites.numbers import Numbers
-from pacman_app.map import Direction
 from pacman_app.pixels import to_pixels
 
 from pacman_ai_neat.playback_player import PlaybackPlayer
 
 
-class CardinalVision:
+class CardinalVision(Game):
     """Area for testing PacMan's cardinal vision."""
 
     def __init__(self) -> None:
@@ -46,72 +46,6 @@ class CardinalVision:
 
         self.pacman.initialise()
         self.ghosts.initialise()
-
-    def check_move(self, move: Direction) -> Direction:
-        """Check for new PacMan move."""
-
-        for event in pygame.event.get():
-            # Allow quitting
-            if event.type == pygame.QUIT: 
-                pygame.quit()
-                exit()
-
-            # Set move
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    move = Direction.UP
-                elif event.key == pygame.K_RIGHT:
-                    move =  Direction.RIGHT
-                elif event.key == pygame.K_DOWN:
-                    move =  Direction.DOWN
-                elif event.key == pygame.K_LEFT:
-                    move =  Direction.LEFT
-
-        return move
-
-    def advance(self, move: Direction) -> None:
-        """Advance to the next frame."""
-
-        # Move characters and check for collisions
-        self.ghosts.move()
-        self.pacman.move(move)
-        self.ghosts.check_collision()
-
-        # Update pacdots
-        dots_changed = False
-        if self.pacdots.check_if_eaten(self.pacman):
-            self.pacman.score += 10
-            self.pacman.move_next = False
-            dots_changed = True
-        elif self.pacdots.check_if_powered(self.pacman):
-            self.pacman.score += 50
-            self.pacman.move_next = False
-            self.ghosts.frightened = True
-            dots_changed = True
-
-        # Alter ghosts depending on remaining dots
-        if dots_changed:
-            if self.pacdots.remaining == 214:
-                self.ghosts.inky.inactive = False
-            elif self.pacdots.remaining == 184:
-                self.ghosts.clyde.inactive = False
-            elif self.pacdots.remaining == self.ghosts.blinky.elroy_first_threshold:
-                self.ghosts.blinky.elroy = 1
-            elif self.pacdots.remaining == self.ghosts.blinky.elroy_second_threshold:
-                self.ghosts.blinky.elroy = 2
-            elif self.pacdots.remaining == self.fruit.first_threshold:
-                self.fruit.available = True
-            elif self.pacdots.remaining == self.fruit.second_threshold:
-                self.fruit.available = True
-
-        # Update fruit
-        if self.fruit.available:
-            if self.pacman.collided_with(self.fruit):
-                self.pacman.score += 100
-                self.fruit.available = False
-            elif self.fruit.available_countdown == 0:
-                self.fruit.available = False
-            self.fruit.available_countdown -= 1
 
     def update_screen(self) -> None:
         """Draw the current frame to the screen."""
