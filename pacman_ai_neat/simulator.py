@@ -300,8 +300,7 @@ def full_game(pacman: Player) -> Player:
     """Run PacMan in the game with PacDots, PowerDots and Ghosts.
     
     Runs until PacMan dies, goes too long without eating a dot or stays still for too long.
-    Assigns a fitness that is a the multiplication of the square of the score and time taken
-    to achieve it.
+    Assigns a fitness that the number of dots eaten.
     """
 
     pacman.initialise()
