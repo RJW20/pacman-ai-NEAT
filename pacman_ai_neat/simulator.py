@@ -7,7 +7,7 @@ def only_dots(pacman: Player) -> Player:
     """Run PacMan in the game with only PacDots.
     
     Runs until PacMan goes too long without eating a dot or stays still for too long.
-    Assigns a fitness that is a ratio between score and time taken to achieve it.
+    Assigns a fitness that is a ratio between score^4 and time taken to achieve it.
     """
 
     pacman.initialise()
