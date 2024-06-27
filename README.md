@@ -35,7 +35,7 @@ PacMan can choose to move in any direction forward, right, back or left i.e. rel
 The algorithm starts off with networks that have 8 input nodes, 1 bias node, 4 output nodes with sigmoid activation, and one random connection. A move is chosen by mapping the output nodes to the 4 possible moves and choosing the move which corresponds to the node with highest activation.
 
 ## Training
-Training was split up into 5 separate phases, to enable PacMan to learn different skills in isolation before having to deal with more complicated scenarios.
+Training is split up into 5 separate phases, to enable PacMan to learn different skills in isolation before having to deal with more complicated scenarios.
 
 ### Phase 1 - Only Dots
 
@@ -93,3 +93,15 @@ Eating all the dots.
 The fitness function is essentially the same as before, but it is not PacMan's score anymore since that can be increased by eating frightened Ghosts and the Fruit which with how score is calculated can skew the score massively if PacMan gets lucky. To achieve the same as before the fitness is now just the number of PacDots and PowerDots eaten multiplied by 10.
 
 ## Results:
+The network produced from the training is capable of completing the full game. However, the random motion of the Ghosts in frightened mode mean that it is unable to be consistent at doing so, resulting in a rate of about 1 in 500 games to actually eat all the dots. Below is one such game, achieved after 19 generations in phase 5 and 92 generations in total (30 + 5 + 8 + 30 + 19).
+
+![win](https://github.com/RJW20/pacman-ai-NEAT/assets/99192767/b0686305-9a97-43c0-8882-30bd55960563)
+
+Note that this is not actually the highest score PacMan achieved, but the goal here wasn't to maximise his score but instead the numbr of dots eaten.
+
+Taking a look at the network itself (using [this](https://github.com/RJW20/NEAT-genome-utility)):
+
+![winning_genome](https://github.com/RJW20/pacman-ai-NEAT/assets/99192767/9e552f9c-3f16-41b4-a4ae-a5bb560ab801)
+
+
+we can see that PacMan is only actually using the front left ordinal vision, implying the algorithm has determined that in its current state the ordinal vision is not useful. Perhaps increasing the size of the 3x3 squares thus might provide better results, but equally since we are only using one-hot values for these squares it might be more that actually they are not helpful inputs (one can imagine a scenario where the node is turned on, but actually the active Ghost is on the other side of a wall with no easy route to PacMan, so not actually threatening him and so reacting to the input doesn't make any sense).
