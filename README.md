@@ -103,5 +103,4 @@ Taking a look at the network itself (using [this](https://github.com/RJW20/NEAT-
 
 ![winning_genome](https://github.com/RJW20/pacman-ai-NEAT/assets/99192767/9e552f9c-3f16-41b4-a4ae-a5bb560ab801)
 
-
 we can see that PacMan is only actually using the front left ordinal vision, implying the algorithm has determined that in its current state the ordinal vision is not useful. Perhaps increasing the size of the 3x3 squares thus might provide better results, but equally since we are only using one-hot values for these squares it might be more that actually they are not helpful inputs (one can imagine a scenario where the node is turned on, but actually the active Ghost is on the other side of a wall with no easy route to PacMan, so not actually threatening him and so reacting to the input doesn't make any sense).
