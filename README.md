@@ -1,5 +1,5 @@
 # PacMan AI: NEAT
-An application of my implementation of NEAT (https://github.com/RJW20/NEAT) to the game PacMan.
+An application of my implementation of [NEAT](https://github.com/RJW20/NEAT) to the game PacMan.
 
 ## Configuration
 
