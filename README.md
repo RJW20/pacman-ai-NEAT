@@ -51,7 +51,7 @@ The fitness function is a ratio between the number of dots eaten raised to the p
 ### Phase 2 - Dots and Blinky
 
 #### Setup
-In this phase we also add Blinky into the Maze. This should teach PacMan to avoid the Ghosts, while still retaining the ability to hunt down the PacDots.
+In this phase we add Blinky into the Maze. This should teach PacMan to avoid the Ghosts, while still retaining the ability to hunt down the PacDots.
 
 #### End criteria
 Eating all of the PacDots (240). This is actually easier to achieve now because reacting to Blinky stops PacMan from getting stuck in endless loops. 
@@ -97,7 +97,7 @@ The network produced from the training is capable of completing the full game. H
 
 ![win](https://github.com/RJW20/pacman-ai-NEAT/assets/99192767/b0686305-9a97-43c0-8882-30bd55960563)
 
-Note that this is not actually the highest score PacMan achieved, but the goal here wasn't to maximise his score but instead the numbr of dots eaten.
+Note that this is not actually the highest score PacMan achieved, but the goal here wasn't to maximise his score but instead the number of dots eaten.
 
 Taking a look at the network itself (using [this](https://github.com/RJW20/NEAT-genome-utility)):
 
